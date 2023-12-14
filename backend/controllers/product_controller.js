@@ -3,15 +3,15 @@ const { checkMissingField } = require("../utils/validate_missing_field");
 
 const getProduct = async (_req, res) => {
   try {
-    const productData = await ProductModel.find();
-    res.status(200).json({ data: productData });
+    const data = await ProductModel.find();
+    res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ message: error?.message || error });
   }
 };
 
 const addProduct = async (req, res) => {
-  const { name, image, description, weight, quantity, price } = req.body;
+  const { name, image, description, weight, stock, price } = req.body;
   const productValidation = checkMissingField(req.body);
   if (productValidation) {
     res.status(401).json(productValidation);
@@ -22,7 +22,7 @@ const addProduct = async (req, res) => {
       image,
       description,
       weight,
-      quantity,
+      stock,
       price,
     }).save();
     res

@@ -11,6 +11,7 @@ const authenticate = async (req, res, next) => {
     const user = await UserModel.findOne({ _id: userId });
     const role = user?.userType;
     req.userType = role;
+    req.userId = userId;
     next();
   } catch (error) {
     res
