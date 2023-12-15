@@ -1,13 +1,20 @@
-import React, { useState } from "react";
-import { Input, Box, Button } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { Input, Box, Button, VStack, Text } from "@chakra-ui/react";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserLoggedIn } from "../redux/authentication/action";
+import { useNavigate } from "react-router-dom";
+import { Spinner } from "@chakra-ui/react";
+import { toast } from "react-toastify";
 const Login = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({
     userId: "",
     password: "",
   });
+  const { loggedInUser, loading, error } = useSelector(
+    (store) => store.authenticationReducer
+  );
 
   const handleLogin = () => {
     var payload;
@@ -17,39 +24,65 @@ const Login = () => {
       payload = { phone: userDetails.userId, password: userDetails.password };
     }
 
-
-
-    console.log(document.cookie);
-
-    // You can also access specific cookies if needed
-    const jwtToken = document.cookie.replace(
-      /(?:(?:^|.*;\s*)jwtToken\s*=\s*([^;]*).*$)|^.*$/,
-      "$1"
-    );
-    const refreshToken = document.cookie.replace(
-      /(?:(?:^|.*;\s*)refreshToken\s*=\s*([^;]*).*$)|^.*$/,
-      "$1"
-    );
-
-    console.log("JWT Token:", jwtToken);
-    console.log("Refresh Token:", refreshToken);
     dispatch(getUserLoggedIn(payload));
   };
+  useEffect(() => {
+    if (loggedInUser) {
+      toast.success("Logged in successfully");
+      navigate("/dashboard/products", { replace: true });
+    }
+    if (error) {
+      toast.error(error);
+    }
+  }, [loggedInUser, navigate, error]);
+
+ 
   return (
-    <Box>
-      <Input
-        placeholder="Enter email/phone"
-        onChange={(e) =>
-          setUserDetails({ ...userDetails, userId: e.target.value })
-        }
-      />
-      <Input
-        placeholder="Password"
-        onChange={(e) =>
-          setUserDetails({ ...userDetails, password: e.target.value })
-        }
-      />
-      <Button onClick={handleLogin}>Login</Button>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="70vh"
+    >
+      <Box
+        maxW="lg"
+        m="auto"
+        p={4}
+        borderWidth="1px"
+        borderRadius="lg"
+        boxShadow="md"
+        bg="white"
+        width={"md"}
+      >
+        <VStack spacing={4}>
+          <Text fontSize={"md"} fontWeight={"bold"}>
+            Welcome to Techeagle
+          </Text>
+          <Input
+            placeholder="Enter email/phone"
+            value={userDetails.userId}
+            onChange={(e) =>
+              setUserDetails({ ...userDetails, userId: e.target.value })
+            }
+          />
+          <Input
+            type="password"
+            placeholder="Password"
+            value={userDetails.password}
+            onChange={(e) =>
+              setUserDetails({ ...userDetails, password: e.target.value })
+            }
+          />
+          <Button
+            colorScheme="blue"
+            onClick={handleLogin}
+            width={"full"}
+            maxW="lg"
+          >
+            {loading ? <Spinner color="white.500" /> : "Login"}
+          </Button>
+        </VStack>
+      </Box>
     </Box>
   );
 };

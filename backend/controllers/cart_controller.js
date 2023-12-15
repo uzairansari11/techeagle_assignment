@@ -1,8 +1,10 @@
 const { CartModel } = require("../models/cart_model");
+const { ProductModel } = require("../models/product_model");
 const { checkMissingField } = require("../utils/validate_missing_field");
 
 const getCartProduct = async (req, res) => {
   const id = req.userId;
+
   try {
     const data = await CartModel.find({
       userId: id,
@@ -17,6 +19,7 @@ const addCartProduct = async (req, res) => {
   const { name, image, description, weight, price, _id, quantity } = req.body;
   const userId = req.userId;
   const productValidation = checkMissingField(req.body);
+
   if (productValidation) {
     res.status(401).json(productValidation);
   }
@@ -39,7 +42,7 @@ const addCartProduct = async (req, res) => {
         quantity,
         userId,
       });
-      await addProduct.save();
+      await data.save();
       return res
         .status(201)
         .json({ message: "product added successfully", data });
@@ -56,9 +59,10 @@ const addCartProduct = async (req, res) => {
 const updateCartProduct = async (req, res) => {
   const { id } = req.params;
   const userId = req.userId;
+  console.log(req.body);
   try {
-    const updatedProduct = await CartModel.findByIdAndUpdate(
-      { $and: [{ _id: id }, { userId: userId }] },
+    const updatedProduct = await CartModel.findOneAndUpdate(
+      { _id: id, userId: userId },
       req.body,
       { new: true }
     );
@@ -79,10 +83,12 @@ const updateCartProduct = async (req, res) => {
 const deleteCartProduct = async (req, res) => {
   const { id } = req.params;
   const userId = req.userId;
+  console.log;
   try {
-    const deleteProduct = await CartModel.findByIdAndDelete({
-      $and: [{ _id: id }, { userId: userId }],
-    });
+    const deleteProduct = await CartModel.findByIdAndDelete(
+      { _id: id },
+      { userId: userId }
+    );
     if (deleteProduct) {
       res
         .status(200)

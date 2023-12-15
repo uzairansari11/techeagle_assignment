@@ -1,17 +1,38 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import { Box, Grid } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import Loading from "./Loading";
 import Error from "./Error";
 import NotFound from "./NotFound";
-import {getProductDataFromApi} from "../redux/products/action"
+import { toast } from "react-toastify";
+import {
+  addToCartDataInUserDataBase,
+  successAction,
+} from "../redux/carts/action";
 const Products = () => {
-  const dispatch = useDispatch();
   const { loading, error, data } = useSelector((store) => store.productReducer);
-   useEffect(() => {
-     dispatch(getProductDataFromApi());
-   }, [dispatch]);
+  const { isSuccess, isError } = useSelector((store) => store.cartReducer);
+  const dispatch = useDispatch();
+
+  const addToCartProduct = useCallback(
+    (payload) => {
+      toast.info("Adding Product", {
+        position: "top-right",
+        autoClose: 500,
+      });
+      dispatch(addToCartDataInUserDataBase(payload));
+    },
+    [dispatch]
+  );
+  useEffect(() => {
+    if (isError) {
+      toast.error(isError);
+    } else if (isSuccess) {
+      toast.success("Product added ");
+      dispatch(successAction());
+    }
+  }, [isSuccess, isError]);
   return (
     <>
       {loading ? (
@@ -20,7 +41,7 @@ const Products = () => {
         <Error message={error} />
       ) : data?.length > 0 ? (
         <Box
-          overflowY={"auto"} 
+          overflowY={"auto"}
           maxH={"calc(100vh - 100px)"}
           paddingBottom={"20px"}
         >
@@ -34,7 +55,13 @@ const Products = () => {
             gap={4}
           >
             {data.map((product) => (
-              <ProductCard key={product._id} {...product} />
+              <ProductCard
+                key={product._id}
+                {...product}
+                handler={addToCartProduct}
+                buttonText="Add"
+                tooltipLabel="Add to cart"
+              />
             ))}
           </Grid>
         </Box>

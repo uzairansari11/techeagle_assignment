@@ -1,30 +1,73 @@
-import * as types from "./type"
+import * as types from "./type";
 const initialState = {
-  loading: true,
+  isLoading: true,
   cart: [],
-  error: false,
+  isError: false,
+  isSuccess: false,
 };
 
 export const cartReducer = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case types.loading:
+    case types.isLoading:
       return {
         ...state,
-        loading: true,
+        isLoading: true,
+        isError: false,
+        isSuccess: false,
       };
-    case types.error:
+    case types.isError:
       return {
         ...state,
-        loading: false,
-        error: payload,
+        isLoading: false,
+        isError: payload,
+        isSuccess: false,
+      };
+    case types.isSuccess:
+      return {
+        ...state,
+        isSuccess: false,
       };
     case types.getCartProduct:
       return {
         ...state,
-        loading: false,
+        isLoading: false,
         cart: payload,
+        isError: false,
+        
       };
+
+    case types.addToCartProduct:
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+        cart: [...state.cart].map((ele) => {
+          return ele._id === payload._id ? payload : ele;
+        }),
+      };
+    
+    case types.removeCartProduct:
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+        cart: [...state.cart].filter((ele) => {
+          return ele._id !== payload._id
+        }),
+      };
+    
+    case types.updateCartProduct:
+     return {
+       ...state,
+       isLoading: false,
+       isError: false,
+       cart: [...state.cart].map((ele) => {
+         return ele._id === payload._id ? payload : ele;
+       }),
+     };
     default:
       return state;
   }

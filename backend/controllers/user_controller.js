@@ -43,7 +43,6 @@ const userRegistration = async (request, response) => {
 
 const userLogin = async (request, response) => {
   const { email, phone, password } = request.body;
-
   try {
     /* checking for user  */
     const isUserExists = await UserModel.findOne({
@@ -74,14 +73,22 @@ const userLogin = async (request, response) => {
             expiresIn: "4days",
           }
         );
-        return response
-          .status(200)
-          .json({
-            message: "login successful",
-            jwt_token,
-            refresh_token, 
-            data: isUserExists ,
-          });
+
+        response.cookie("jwtToken", jwt_token, {
+          maxAge: 2 * 24 * 60 * 60 * 1000,
+          // httpOnly: true,
+        });
+        response.cookie("refreshToken", refresh_token, {
+          maxAge: 4 * 24 * 60 * 60 * 1000,
+          // httpOnly: true,
+        });
+
+        return response.status(200).json({
+          message: "login successful",
+          data: isUserExists,
+          refresh_token,
+          jwt_token,
+        });
       } else {
         return response.status(400).json({ message: "wrong password" });
       }

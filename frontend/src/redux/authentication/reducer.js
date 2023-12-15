@@ -1,20 +1,29 @@
 import * as types from "./type";
+import Cookies from "js-cookie";
 const initialState = {
-  loggedInUser: null,
-  loading: true,
+  loggedInUser: Cookies.get(`${process.env.REACT_APP_JWT_TOKEN}`) || null,
+  loading: false,
   error: false,
+  userDetails: Cookies.get(`${process.env.REACT_APP_USER_DATA}`)
+    ? JSON?.parse(Cookies.get(`${process.env.REACT_APP_USER_DATA}`))
+    : null,
 };
 
 export const authenticationReducer = (state = initialState, action) => {
   const { type, payload } = action;
-
   switch (type) {
     case types.loading:
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: false };
     case types.error:
       return { ...state, error: payload, loading: false };
     case types.loginSuccess:
-      return { ...state, loginSuccess: payload, loading: false };
+      return {
+        ...state,
+        loggedInUser: payload.jwt_token,
+        userDetails: payload.userData,
+        loading: false,
+        error: false,
+      };
     default:
       return state;
   }

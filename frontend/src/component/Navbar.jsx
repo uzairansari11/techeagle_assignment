@@ -2,8 +2,11 @@ import React from "react";
 import { Box, Image } from "@chakra-ui/react";
 import UserAvatar from "./UserAvatar.jsx";
 import { Link } from "react-router-dom";
-
+import { useSelector } from "react-redux";
+import MenuOptions from "./MenuOptions.jsx";
 const Navbar = () => {
+  const { userDetails } = useSelector((store) => store.authenticationReducer);
+ 
   return (
     <Box
       display="flex"
@@ -29,7 +32,9 @@ const Navbar = () => {
         </Box>
       </Link>
       <Box>
-        <UserAvatar />
+        <MenuOptions>
+          <UserAvatar name={userDetails?.name} />
+        </MenuOptions>
       </Box>
     </Box>
   );

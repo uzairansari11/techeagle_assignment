@@ -4,11 +4,11 @@ const UserAvatar = ({ image, name }) => {
 
   return (
     <Avatar
-      name="Uzair Tioluwani"
+      name={name||"N/A"}
       src="https://bit.ly/broken-link"
       size="md"
     >
-      <AvatarBadge boxSize="1em" bg="green.500" />
+      <AvatarBadge boxSize="1em" bg="green.500"  />
     </Avatar>
   );
 };

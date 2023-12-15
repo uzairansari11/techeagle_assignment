@@ -2,7 +2,6 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { Flex } from "@chakra-ui/react";
 import { navLinks } from "../constant/constant";
-
 const activeStyle = {
   fontWeight: "bold",
   fontSize: "1.2rem",
@@ -23,7 +22,7 @@ const inactiveStyle = {
   color: "black",
   boxShadow:
     "rgba(0, 0, 0, 0.05) 0px 5px 10px -5px, rgba(0, 0, 0, 0.02) 0px 2px 4px -1px",
-  backgroundColor: "#F3F8FF",
+  backgroundColor: "#d9614e",
   fontWeight: "normal",
 };
 

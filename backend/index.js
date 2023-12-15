@@ -1,5 +1,6 @@
 /* importing express */
 require("dotenv").config();
+var cookieParser = require("cookie-parser");
 var cors = require("cors");
 const express = require("express");
 const { startServer } = require("./utils/server_start");
@@ -12,7 +13,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
+app.use(cookieParser());
 /* Routes */
 
 /*  Home route */
