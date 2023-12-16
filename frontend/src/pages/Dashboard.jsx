@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Flex, Spacer, Box } from "@chakra-ui/react";
 import Sidebar from "../component/Sidebar";
-import {useDispatch} from "react-redux"
-import { getProductDataFromApi } from "../redux/products/action";
+import { useDispatch, useSelector } from "react-redux";
+import { getProductDataFromApi, } from "../redux/products/action";
 const Dashboard = () => {
+
     const dispatch = useDispatch();
     useEffect(() => {
       dispatch(getProductDataFromApi());

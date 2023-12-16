@@ -6,6 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { Spinner } from "@chakra-ui/react";
 import { toast } from "react-toastify";
 const Login = () => {
+  const { userDetails: data } = useSelector(
+    (store) => store.authenticationReducer
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({
@@ -29,12 +32,16 @@ const Login = () => {
   useEffect(() => {
     if (loggedInUser) {
       toast.success("Logged in successfully");
-      navigate("/dashboard/products", { replace: true });
+      if (data?.userType === "customer") {
+        navigate("/dashboard/products", { replace: true });
+      } else {
+        navigate("/dashboard/manager/products", { replace: true });
+      }
     }
     if (error) {
       toast.error(error);
     }
-  }, [loggedInUser, navigate, error]);
+  }, [loggedInUser, navigate, error, data?.userType]);
 
   return (
     <Box
