@@ -1,5 +1,4 @@
 const { CartModel } = require("../models/cart_model");
-const { ProductModel } = require("../models/product_model");
 const { checkMissingField } = require("../utils/validate_missing_field");
 
 const getCartProduct = async (req, res) => {
@@ -83,7 +82,6 @@ const updateCartProduct = async (req, res) => {
 const deleteCartProduct = async (req, res) => {
   const { id } = req.params;
   const userId = req.userId;
-  console.log;
   try {
     const deleteProduct = await CartModel.findByIdAndDelete(
       { _id: id },
@@ -100,9 +98,24 @@ const deleteCartProduct = async (req, res) => {
     res.status(500).json({ message: error?.message || error });
   }
 };
+
+const deleteAllCart = async (req, res) => {
+  const userId = req.userId;
+  try {
+    const deletedItem = await CartModel.deleteMany({ userId: userId });
+    if (!deletedItem) {
+      res.status(400).json({ message: "Item does not exist" });
+    } else {
+      res.status(200).json({ data: [], message: "Item deleted successfully" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error?.message || error });
+  }
+};
 module.exports = {
   getCartProduct,
   addCartProduct,
   updateCartProduct,
   deleteCartProduct,
+  deleteAllCart,
 };

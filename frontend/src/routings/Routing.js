@@ -6,17 +6,22 @@ import Login from "../pages/Login";
 import Carts from "../component/Carts";
 import NotFound from "../component/NotFound";
 import { PrivateRoute } from "../hoc/PrivateRoute";
+import Signup from "../component/Signup";
+import ManagerProduct from "../component/ManagerProduct";
+import ManagerOrder from "../component/ManagerOrder";
+import ManagerAddProduct from "../component/ManagerAddProduct";
 
 const Routing = () => {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
+      <Route path="/register" element={<Signup />} />
       <Route path="/dashboard" element={<Dashboard />}>
         <Route
           index
           element={
             <PrivateRoute>
-              <Products />{" "}
+              <Products />
             </PrivateRoute>
           }
         />
@@ -25,6 +30,30 @@ const Routing = () => {
           element={
             <PrivateRoute>
               <Products />{" "}
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="manager/products"
+          element={
+            <PrivateRoute>
+              <ManagerProduct />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="manager/orders"
+          element={
+            <PrivateRoute>
+              <ManagerOrder />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="manager/addproduct"
+          element={
+            <PrivateRoute>
+              <ManagerAddProduct />
             </PrivateRoute>
           }
         />
@@ -45,6 +74,7 @@ const Routing = () => {
           }
         />
       </Route>
+
       <Route path="*" element={<NotFound message={"Page Doesn't Exist"} />} />
     </Routes>
   );

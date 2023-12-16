@@ -24,6 +24,15 @@ export const authenticationReducer = (state = initialState, action) => {
         loading: false,
         error: false,
       };
+
+      case types.logoutSuccess:
+        return {
+        ...state,
+          loggedInUser: null,
+          userDetails: null,
+          loading: false,
+          error: false,
+        };
     default:
       return state;
   }

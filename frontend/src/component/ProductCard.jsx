@@ -11,6 +11,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+import ProductModal from "./ProductMOdal";
 const ProductCard = ({
   _id,
   image,
@@ -26,19 +27,31 @@ const ProductCard = ({
   tooltipLabel,
   showQuantityButton,
   handleProductQuantity,
+  showSecondButton,
+  secondTooltipLabel,
+  secondButtonText,
+  isModalOpen,
+  handlerSecond,
+  closeModal,
+  handleUpdate,
 }) => {
+  const payload = {
+    image,
+    name,
+    price,
+    description,
+    weight,
+    _id,
+    quantity: 1,
+  };
   const addToCart = () => {
-    const payload = {
-      image,
-      name,
-      price,
-      description,
-      weight,
-      _id,
-      quantity: 1,
-    };
     handler(payload);
   };
+  const payload2 = { image, name, price, description, weight, _id, stock };
+  const updateProduct = () => {
+    handlerSecond(payload2);
+  };
+
   return (
     <Box
       maxW="xs"
@@ -138,8 +151,26 @@ const ProductCard = ({
               {buttonText}
             </Button>
           </Tooltip>
+          {showSecondButton ? (
+            <Tooltip label={secondTooltipLabel || "Nothing"} hasArrow>
+              <Button
+                colorScheme={colorScheme || "teal"}
+                variant="outline"
+                w={"full"}
+                onClick={updateProduct}
+              >
+                {secondButtonText}
+              </Button>
+            </Tooltip>
+          ) : null}
         </Flex>
       </Box>
+      <ProductModal
+        isOpen={isModalOpen}
+        data={payload2}
+        closeModal={closeModal}
+        handleUpdate={handleUpdate}
+      />
     </Box>
   );
 };

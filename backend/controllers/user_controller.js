@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const { UserModel } = require("../models/user_model");
 const jwt = require("jsonwebtoken");
+const { Blacklist } = require("../models/blacklist_modle");
 const userRegistration = async (request, response) => {
   /* receiving  all the using details required  */
   const { name, email, phone, address, password, userType } = request.body;
@@ -98,4 +99,16 @@ const userLogin = async (request, response) => {
   }
 };
 
-module.exports = { userRegistration, userLogin };
+const userLogout = async (request, response) => {
+  
+  try {
+    const token = request.headers.authorization.split(" ")[1];
+    const blacklistedToken =  new Blacklist({ token });
+    await blacklistedToken.save();
+    return response.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.error(error);
+    response.status(500).send({ message: error?.message || error });
+  }
+};
+module.exports = { userRegistration, userLogin, userLogout };

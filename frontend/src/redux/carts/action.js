@@ -27,6 +27,13 @@ const getCartAction = (payload) => {
   };
 };
 
+const deleteAll = (payload) => {
+  return {
+    type: types.deleteAllProduct,
+    payload,
+  };
+};
+
 const addToCartAction = (payload) => {
   return {
     type: types.addToCartProduct,
@@ -47,13 +54,16 @@ const updateCartAction = (payload) => {
 };
 export const getCartDataFromApi = () => async (dispatch) => {
   dispatch(loadingAction());
+ const token =(cookiesGetter());
   try {
     const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/cart`, {
       headers: {
-        Authorization: `token ${cookiesGetter()}`,
+        Authorization: `token ${token}`,
       },
     });
     const data = response?.data;
+    
+    console.log("data from  cart",data)
     dispatch(getCartAction(data));
   } catch (error) {
     console.log(error);
@@ -111,6 +121,23 @@ export const updateCartProductApi = (id, payload) => async (dispatch) => {
     );
     const data = response?.data?.data;
     dispatch(updateCartAction(data));
+  } catch (error) {
+    dispatch(errorAction(error?.response?.data?.message || error?.message));
+  }
+};
+
+export const deleteAllCartApi = () => async (dispatch) => {
+  try {
+    const response = await axios.delete(
+      `${process.env.REACT_APP_BASE_URL}/cart/delete/all`,
+      {
+        headers: {
+          Authorization: `token ${cookiesGetter()}`,
+        },
+      }
+    );
+    const data = response?.data?.data;
+    dispatch(deleteAll(data));
   } catch (error) {
     dispatch(errorAction(error?.response?.data?.message || error?.message));
   }

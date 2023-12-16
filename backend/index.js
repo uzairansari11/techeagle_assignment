@@ -7,6 +7,7 @@ const { startServer } = require("./utils/server_start");
 const { userRouter } = require("./routes/user_route");
 const { productRouter } = require("./routes/product_route");
 const { cartRouter } = require("./routes/cart_route");
+const { orderRouter } = require("./routes/order_route");
 const app = express();
 
 /* Using Middleware */
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 app.use("/user", userRouter);
 app.use("/product", productRouter);
 app.use("/cart", cartRouter);
+app.use("/order", orderRouter);
 
 // Error handler middleware
 app.use((err, req, res, next) => {

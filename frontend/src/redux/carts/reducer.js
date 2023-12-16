@@ -34,7 +34,6 @@ export const cartReducer = (state = initialState, action) => {
         isLoading: false,
         cart: payload,
         isError: false,
-        
       };
 
     case types.addToCartProduct:
@@ -47,7 +46,7 @@ export const cartReducer = (state = initialState, action) => {
           return ele._id === payload._id ? payload : ele;
         }),
       };
-    
+
     case types.removeCartProduct:
       return {
         ...state,
@@ -55,19 +54,28 @@ export const cartReducer = (state = initialState, action) => {
         isError: false,
         isSuccess: true,
         cart: [...state.cart].filter((ele) => {
-          return ele._id !== payload._id
+          return ele._id !== payload._id;
         }),
       };
-    
+
     case types.updateCartProduct:
-     return {
-       ...state,
-       isLoading: false,
-       isError: false,
-       cart: [...state.cart].map((ele) => {
-         return ele._id === payload._id ? payload : ele;
-       }),
-     };
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        cart: [...state.cart].map((ele) => {
+          return ele._id === payload._id ? payload : ele;
+        }),
+      };
+
+    case types.deleteAllProduct:
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        cart: payload,
+      };
+
     default:
       return state;
   }

@@ -17,6 +17,7 @@ const Carts = () => {
   const { isLoading, isError, cart, isSuccess } = useSelector(
     (store) => store.cartReducer
   );
+
   const dispatch = useDispatch();
   const removeProduct = useCallback(
     (data) => {
@@ -42,8 +43,10 @@ const Carts = () => {
       toast.success("Product removed");
       dispatch(successAction());
     }
-    dispatch(getCartDataFromApi());
   }, [isError, isSuccess]);
+  useEffect(() => {
+    dispatch(getCartDataFromApi());
+  }, []);
   return (
     <>
       <Box display={"flex"}>

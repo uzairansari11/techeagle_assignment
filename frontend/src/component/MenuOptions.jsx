@@ -1,7 +1,7 @@
 import React from "react";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-const MenuOptions = ({ children }) => {
+const MenuOptions = ({ children,logout }) => {
   return (
     <>
       <Menu>
@@ -12,7 +12,7 @@ const MenuOptions = ({ children }) => {
             </MenuButton>
             <MenuList>
               <MenuItem>Profile</MenuItem>
-              <MenuItem>Logout</MenuItem>
+              <MenuItem onClick={logout}>Logout</MenuItem>
             </MenuList>
           </>
         )}

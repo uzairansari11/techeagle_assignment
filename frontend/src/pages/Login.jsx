@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Input, Box, Button, VStack, Text } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserLoggedIn } from "../redux/authentication/action";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Spinner } from "@chakra-ui/react";
 import { toast } from "react-toastify";
 const Login = () => {
@@ -36,7 +36,6 @@ const Login = () => {
     }
   }, [loggedInUser, navigate, error]);
 
- 
   return (
     <Box
       display="flex"
@@ -81,6 +80,7 @@ const Login = () => {
           >
             {loading ? <Spinner color="white.500" /> : "Login"}
           </Button>
+          <Link to="/register">Register? Go to Register</Link>
         </VStack>
       </Box>
     </Box>

@@ -4,20 +4,56 @@ import UserAvatar from "./UserAvatar.jsx";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import MenuOptions from "./MenuOptions.jsx";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { cookiesGetter } from "../utils/cookies.js";
+import { logoutUserFromApi } from "../redux/authentication/action.js";
+import { userType } from "../constant/constant.js";
+import {useNavigate} from "react-router-dom"
 const Navbar = () => {
+  const dispatch = useDispatch();
   const { userDetails } = useSelector((store) => store.authenticationReducer);
- 
+const navigate=useNavigate()
+
+  const handleLogout = async () => {
+    const token = cookiesGetter();
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/user/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `token ${token}`,
+          },
+        }
+      );
+      dispatch(logoutUserFromApi());
+      navigate("/",{replace:true})
+      toast.success(response?.data?.message);
+    } catch (error) {
+      toast.error(error?.response?.data);
+    }
+  };
+
   return (
     <Box
       display="flex"
       width={"100%"}
       px="4"
-      bgColor={"#687EFF"}
+      bgColor={"#3182ce"}
+      shadow={"sm"}
       py="4"
       justifyContent={"space-between"}
-      overflowY="hidden" // Set overflow to hidden to remove vertical scrollbar
+      overflowY="hidden"
     >
-      <Link to="/dashboard/products">
+      <Link
+        to={
+          userDetails === userType.customer
+            ? "/dashboard/products"
+            : "/dashboard/manager/products"
+        }
+      >
         <Box
           width={"20"}
           display="flex"
@@ -32,9 +68,11 @@ const Navbar = () => {
         </Box>
       </Link>
       <Box>
-        <MenuOptions>
-          <UserAvatar name={userDetails?.name} />
-        </MenuOptions>
+        {userDetails ? (
+          <MenuOptions logout={handleLogout}>
+            <UserAvatar name={userDetails?.name} />
+          </MenuOptions>
+        ) : null}
       </Box>
     </Box>
   );

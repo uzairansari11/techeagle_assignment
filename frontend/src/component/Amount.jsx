@@ -1,13 +1,54 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, Button, Text, Input } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { loadingAction, postOrderProductApi } from "../redux/orders/action";
+import { deleteAllCartApi } from "../redux/carts/action";
+import { toast } from "react-toastify";
 const Amount = ({ cart }) => {
+  const dispatch = useDispatch();
   const { userDetails } = useSelector((store) => store.authenticationReducer);
+  const { orderStatus } = useSelector((store) => store.orderReducer);
   const [customerDetails, setCustomerDetails] = useState({
-    name: userDetails?.name || "",
-    address: userDetails?.address || "",
-    mobileNumber: userDetails?.phone || "",
+    userName: userDetails?.name || "",
+    userAddress: userDetails?.address || "",
+    phone: userDetails?.phone || "",
   });
+  const { userName, userAddress, phone } = customerDetails;
+
+  const handlePlaceOrder = () => {
+    if (!userName || !userAddress || !phone) {
+      return;
+    }
+    const payload =
+      cart.length &&
+      cart.reduce((acc, ele) => {
+        const item = {
+          productId: ele._id,
+          quantity: ele.quantity,
+          price: ele.price,
+          image: ele.image,
+          name: ele.name,
+          userName,
+          phone,
+          userAddress,
+        };
+        acc.push(item);
+        return acc;
+      }, []);
+    if (payload?.length) {
+      dispatch(postOrderProductApi(payload));
+    }
+  };
+
+  useEffect(() => {
+    if (orderStatus) {
+      dispatch(loadingAction());
+      toast.success("Order Placed");
+      setTimeout(() => {
+        dispatch(deleteAllCartApi());
+      }, 2000);
+    }
+  }, [orderStatus, dispatch]);
   const totalPrice = useMemo(() => {
     const totalValue =
       cart.length &&
@@ -17,18 +58,6 @@ const Amount = ({ cart }) => {
       }, 0);
     return Math.round(totalValue);
   }, [cart]);
-  const handlePlaceOrder = () => {
-    // Logic to place order using customerDetails
-    // Example: dispatch(placeOrderAction(customerDetails));
-    // You can dispatch an action to place the order and send customerDetails to the backend
-    // Reset customer details after placing the order
-    setCustomerDetails({
-      name: "",
-      address: "",
-      mobileNumber: "",
-    });
-  };
-
   return (
     <Box maxW={cart?.length > 0 ? "20%" : "0%"} w="full" maxH={"100vh"}>
       <Box
@@ -47,31 +76,31 @@ const Amount = ({ cart }) => {
         <Box display="flex" flexDirection={"column"} rowGap={4}>
           <Input
             placeholder="Name"
-            value={customerDetails.name}
+            value={customerDetails.userName}
             onChange={(e) =>
               setCustomerDetails({
                 ...customerDetails,
-                name: e.target.value,
+                userName: e.target.value,
               })
             }
           />
           <Input
             placeholder="Address"
-            value={customerDetails.address}
+            value={customerDetails.userAddress}
             onChange={(e) =>
               setCustomerDetails({
                 ...customerDetails,
-                address: e.target.value,
+                userAddress: e.target.value,
               })
             }
           />
           <Input
             placeholder="Mobile Number"
-            value={customerDetails.mobileNumber}
+            value={customerDetails.phone}
             onChange={(e) =>
               setCustomerDetails({
                 ...customerDetails,
-                mobileNumber: e.target.value,
+                phone: e.target.value,
               })
             }
           />
@@ -82,9 +111,9 @@ const Amount = ({ cart }) => {
             maxW={"xs"}
             onClick={handlePlaceOrder}
             disabled={
-              !customerDetails.name ||
-              !customerDetails.address ||
-              !customerDetails.mobileNumber
+              !customerDetails.userName ||
+              !customerDetails.userAddress ||
+              !customerDetails.phone
             }
           >
             Place Order
