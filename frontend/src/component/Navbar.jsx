@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Image } from "@chakra-ui/react";
 import UserAvatar from "./UserAvatar.jsx";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import MenuOptions from "./MenuOptions.jsx";
 import { toast } from "react-toastify";
@@ -9,7 +8,6 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { cookiesGetter } from "../utils/cookies.js";
 import { logoutUserFromApi } from "../redux/authentication/action.js";
-import { userType } from "../constant/constant.js";
 import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const dispatch = useDispatch();

@@ -57,6 +57,9 @@ const OrderCard = ({ order }) => {
 
           <Flex justify="space-between">
             <Text fontSize="md" color="gray.600">
+              Order No: {order._id}
+            </Text>
+            <Text fontSize="md" color="gray.600">
               Quantity: {order.quantity}
             </Text>
             <Text fontSize="md" color="gray.600">
@@ -83,7 +86,7 @@ const OrderCard = ({ order }) => {
                 Name
               </Text>
               <Text fontSize="md" color="gray.600">
-                {order?.name}
+                {order?.userName}
               </Text>
             </Box>
             <Box mb={4}>

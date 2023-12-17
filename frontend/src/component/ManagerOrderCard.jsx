@@ -69,6 +69,9 @@ const ManagerOrderCard = ({ order, handleStatus, collectionId, userId }) => {
 
           <Flex justify="space-between">
             <Text fontSize="md" color="gray.600">
+              Order No: {order._id}
+            </Text>
+            <Text fontSize="md" color="gray.600">
               Quantity: {order.quantity}
             </Text>
             <Text fontSize="md" color="gray.600">
@@ -92,7 +95,7 @@ const ManagerOrderCard = ({ order, handleStatus, collectionId, userId }) => {
           <ModalBody>
             <Box mb={4}>
               <Text fontSize="lg" fontWeight="semibold" color="blue.500">
-                Name
+                Product Name
               </Text>
               <Text fontSize="md" color="gray.600">
                 {order?.name}
