@@ -14,16 +14,27 @@ import {
 } from "@chakra-ui/react";
 
 const ProductModal = ({ isOpen, data, closeModal, handleUpdate ,id}) => {
-
   const [formData, setFormData] = useState({
-    name: data?.name,
-    image: data?.image,
-    description: data?.description,
-    weight: data?.weight,
-    stock: data?.stock,
-    price: data?.price,
-   
+    name: "",
+    image: "",
+    description: "",
+    weight: "",
+    stock: "",
+    price: "",
   });
+
+  useEffect(() => {
+    if (data) {
+      setFormData({
+        name: data.name || "",
+        image: data.image || "",
+        description: data.description || "",
+        weight: data.weight || "",
+        stock: data.stock || "",
+        price: data.price || "",
+      });
+    }
+  }, [data]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -31,13 +42,10 @@ const ProductModal = ({ isOpen, data, closeModal, handleUpdate ,id}) => {
   };
 
   const handleSubmit = (id) => {
-    handleUpdate({...formData,id});
-
+    handleUpdate({ ...formData, id });
     closeModal();
   };
-useEffect(()=>{
 
-},[data])
   return (
     <Modal isOpen={isOpen&&data._id===id} onClose={closeModal}>
       <ModalOverlay />
