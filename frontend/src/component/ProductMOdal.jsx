@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -13,16 +13,16 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 
-const ProductModal = ({ isOpen, data, closeModal, handleUpdate }) => {
-  console.log(data, "modal");
+const ProductModal = ({ isOpen, data, closeModal, handleUpdate ,id}) => {
+
   const [formData, setFormData] = useState({
-    name: data.name,
-    image: data.image,
-    description: data.description,
-    weight: data.weight,
-    stock: data.stock,
-    price: data.price,
-    id: data._id,
+    name: data?.name,
+    image: data?.image,
+    description: data?.description,
+    weight: data?.weight,
+    stock: data?.stock,
+    price: data?.price,
+   
   });
 
   const handleInputChange = (e) => {
@@ -30,14 +30,16 @@ const ProductModal = ({ isOpen, data, closeModal, handleUpdate }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = () => {
-    handleUpdate(formData);
+  const handleSubmit = (id) => {
+    handleUpdate({...formData,id});
 
     closeModal();
   };
+useEffect(()=>{
 
+},[data])
   return (
-    <Modal isOpen={isOpen} onClose={closeModal}>
+    <Modal isOpen={isOpen&&data._id===id} onClose={closeModal}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Update Product</ModalHeader>
@@ -94,7 +96,7 @@ const ProductModal = ({ isOpen, data, closeModal, handleUpdate }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
+          <Button colorScheme="blue" mr={3} onClick={()=>handleSubmit(data._id)}>
             Update
           </Button>
           <Button onClick={closeModal}>Cancel</Button>

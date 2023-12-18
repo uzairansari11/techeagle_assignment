@@ -1,4 +1,4 @@
-import React from "react";
+import React, {  useState } from "react";
 import {
   Box,
   Flex,
@@ -30,9 +30,6 @@ const ProductCard = ({
   showSecondButton,
   secondTooltipLabel,
   secondButtonText,
-  isModalOpen,
-  handlerSecond,
-  closeModal,
   handleUpdate,
 }) => {
   const payload = {
@@ -47,10 +44,19 @@ const ProductCard = ({
   const addToCart = () => {
     handler(payload);
   };
-  const payload2 = { image, name, price, description, weight, _id, stock };
-  const updateProduct = () => {
-    handlerSecond(payload2);
+
+  const updateProduct = (data) => {
+    handlerSecond(data);
   };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalData, setModalData] = useState();
+
+  const handlerSecond = (data) => {
+    setIsModalOpen(true);
+    setModalData(data);
+  };
+
 
   return (
     <Box
@@ -157,7 +163,7 @@ const ProductCard = ({
                 colorScheme={colorScheme || "teal"}
                 variant="outline"
                 w={"full"}
-                onClick={updateProduct}
+                onClick={()=>updateProduct({image, name, price, description, weight, _id, stock})}
               >
                 {secondButtonText}
               </Button>
@@ -167,9 +173,10 @@ const ProductCard = ({
       </Box>
       <ProductModal
         isOpen={isModalOpen}
-        data={payload2}
-        closeModal={closeModal}
+        data={modalData}
+        closeModal={() => setIsModalOpen(false)}
         handleUpdate={handleUpdate}
+        id={modalData?._id}
       />
     </Box>
   );
